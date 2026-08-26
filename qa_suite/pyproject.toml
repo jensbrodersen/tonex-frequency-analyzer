@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "guitar-rig-qa-suite"
+version = "0.1.0"
+description = "QA Automation & DSP Testing Harness for Guitar JUCE Plugins"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pytest>=8.0.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",         # Signalverarbeitung, FFT, Frequenzgänge, THD
+    "soundfile>=0.12.0",     # Schnelles Einlesen & Schreiben von WAV/Audio-Dateien
+    "matplotlib>=3.7.0",     # Generiert Frequenzgang-Plots für Berichte
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest-cov>=4.1.0",     # Test-Abdeckung messen
+    "ruff>=0.2.0",           # Extrem schneller Python-Linter/Formatter
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
