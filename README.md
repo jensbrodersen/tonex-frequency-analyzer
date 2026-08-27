@@ -24,6 +24,19 @@
 
 ---
 
+## Diagnostics & Quality Assurance: Clipping & Speaker Safety
+
+The analyzer functions not only as a pure measurement tool but also exposes flawed ToneX captures. The following example demonstrates a direct comparison between a faulty, clipped Fender Twin capture and a clean measurement:
+
+<p align="center">
+  <img src="assets/twin_goodcapture_versus_bad.png" width="750" alt="Fender Twin: Good Capture vs. Bad Capture with Clipping">
+</p>
+
+* **Bad Capture (Blue):** A poorly or overly hot-levelled capture results in massive, uncontrolled comb-filtering artifacts and phase breaks across the entire frequency spectrum. Such digital signal distortions can lead to unhealthy energy spikes during live operation or at high volumes, which in the worst case can **damage studio monitors and speaker cabinets** or severely muddy the sound.
+* **Good Capture (Orange):** The clean, smooth curve proves mathematical integrity and reveals the true, open frequency response of an intact amp without digital artifacts.
+
+---
+
 ## Project Structure
 
 ```text

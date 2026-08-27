@@ -1,0 +1,21 @@
+# ==========================================
+# ToneX Analyzer Konfiguration
+# ==========================================
+
+audio:
+  sample_rate: 44100
+  sweep_duration: 1.5
+  guitar_duration: 3.0
+  channel: 1
+  # Standard-Geräte-IDs (überschreibbar durch CLI oder Auto-Detect)
+  default_input_id: 10
+  default_output_id: 12
+
+dsp:
+  freq_start: 20.0
+  freq_stop_generation: 40000.0  # Sweep mathematisch bis 40 kHz
+  freq_stop_analysis: 20000.0    # Sichtbar/relevant für ToneX bis 20 kHz
+  target_fft_size: 32768
+  savgol_window: 51
+  savgol_polyorder: 3
+  tukey_alpha: 0.3
