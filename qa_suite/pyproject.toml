@@ -26,4 +26,5 @@ dev = [
 minversion = "8.0"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+pythonpath = ["tools"]
 addopts = "-v --tb=short"

@@ -40,13 +40,39 @@ The analyzer functions not only as a pure measurement tool but also exposes how 
 
 ---
 
+## Automated QA & Test Suite
+
+The `qa_suite/` includes an automated test framework powered by **pytest** to ensure DSP integrity, safety, and proper configuration before hardware deployment:
+
+* **Frequency Response & Clipping Protection (`test_frequency_response.py`):** Validates clean curves against abrupt comb-filtering and detects hazardous 0 dB high-frequency clipping plateaus to safeguard FRFR monitors and speakers.
+* **Latency Estimation (`test_latency.py`):** Verifies precise sample-delay tracking using cross-correlation (`scipy.signal.correlate`) between reference and response signals.
+* **Harmonic Distortion (`test_distortion.py`):** Simulates and monitors non-linear saturation thresholds and harmonic behavior across gain stages.
+* **System Alignment (`test_config.py`, `test_audio_sample_rate.py`):** Ensures configuration consistency (strictly locked to **44.1 kHz** to avoid resampling drift or clock mismatches between Windows and audio hardware).
+
+### Running Tests Locally
+
+Navigate into the QA suite and run the test harness via Python:
+
+```bash
+cd qa_suite
+python -m pytest
+```
+---
+
+
 ## Project Structure
 
 ```text
 ├── qa_suite/            # Python DSP engine & analysis tools
+│   ├── pyproject.toml
+│   ├── tests/           # Automated pytest suite (clipping, latency, distortion, config)
+│   └── tools/           # Core analyzer scripts & config.yaml
 ├── juce_plugin/         # Native JUCE C++ application
 ├── cmake/               # CMake configuration files
 ├── example_logs/        # Interactive HTML reports for offline viewing
 ├── assets/              # Visual assets & screenshots for documentation
 ├── CMakeLists.txt       # Root CMake build configuration
 └── .gitignore
+```
+
+---
