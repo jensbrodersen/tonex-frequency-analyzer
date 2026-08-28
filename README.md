@@ -19,21 +19,24 @@
 ## Preview / Example Report
 
 <p align="center">
-  <img src="assets/report_preview.png" width="750" alt="ToneX Analysis Report Preview">
+  <img src="assets/report_preview_clean.html.png" width="48%" alt="ToneX Clean Analysis Report Preview">
+  <img src="assets/report_preview_gain.html.png" width="48%" alt="ToneX Gain Analysis Report Preview">
 </p>
+
+*Example frequency response analyses comparing various amp models: The left report shows the behavior of different clean stages (including Vox AC30, Bogner XTC, and Fender Twin), while the right report illustrates higher gain behaviors (featuring Soldano SLO Crunch/High Gain and Friedman High Gain).*
 
 ---
 
 ## Diagnostics & Quality Assurance: Clipping & Speaker Safety
 
-The analyzer functions not only as a pure measurement tool but also exposes flawed ToneX captures. The following example demonstrates a direct comparison between a faulty, clipped Fender Twin capture and a clean measurement:
+The analyzer functions not only as a pure measurement tool but also exposes how time-based effects and improper headroom impact a signal. The following example demonstrates a direct comparison:
 
 <p align="center">
   <img src="assets/twin_goodcapture_versus_bad.png" width="750" alt="Fender Twin: Good Capture vs. Bad Capture with Clipping">
 </p>
 
-* **Bad Capture (Blue):** A poorly or overly hot-levelled capture results in massive, uncontrolled comb-filtering artifacts and phase breaks across the entire frequency spectrum. Such digital signal distortions can lead to unhealthy energy spikes during live operation or at high volumes, which in the worst case can **damage studio monitors and speaker cabinets** or severely muddy the sound.
-* **Good Capture (Orange):** The clean, smooth curve proves mathematical integrity and reveals the true, open frequency response of an intact amp without digital artifacts.
+* **Modulated / Problematic Preset (Blue):** Shows a preset with active modulation (Chorus), resulting in heavy comb-filtering artifacts and phase cancellations across the mid and high frequencies. While great for tone shaping during play, such modulation sweeps or overly hot-levelled signals can introduce chaotic energy spikes that clutter frequency responses and strain speaker components at high volumes.
+* **Clean Measurement (Orange):** The smooth, unmodulated curve reveals the true, open frequency response of an intact amp model without phase-related interference or digital distortion.
 
 ---
 
