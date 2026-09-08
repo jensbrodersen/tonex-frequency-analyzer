@@ -5,3 +5,4 @@ env/
 .idea/
 .vscode/
 tonex_report.html
+build/

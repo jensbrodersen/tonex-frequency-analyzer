@@ -59,6 +59,37 @@ python -m pytest
 ```
 ---
 
+## Building the Native JUCE C++ Application
+
+Prerequisites include **Visual Studio 2026** with C++ workload and **CMake**.
+
+### Build & Run Instructions (Windows x64)
+
+Open your x64 Native Tools Command Prompt for Visual Studio and run the following commands from the project root:
+
+```cmd
+:: Clean any existing build artifacts
+rmdir /s /q build
+
+:: Configure the project with CMake
+cmake -B build -G "Visual Studio 18 2026" -A x64
+
+:: Build the release binaries (VST3 & Standalone)
+cmake --build build --config Release
+```
+
+### Launching the Standalone App
+
+Once built successfully, you can navigate to the artifacts folder and launch the standalone executable:
+
+```cmd
+cd build\juce_plugin\GuitarRigAnalyzer_artefacts\Release\Standalone\
+GuitarRigAnalyzer.exe
+```
+
+---
+
+
 
 ## Project Structure
 
