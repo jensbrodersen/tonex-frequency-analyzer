@@ -128,3 +128,59 @@ void GuitarRigAnalyzerAudioProcessor::setStateInformation (const void* data, int
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {
     return new GuitarRigAnalyzerAudioProcessor();
 }
+
+bool GuitarRigAnalyzerAudioProcessor::processOfflineFile (const juce::File& inputFile, const juce::File& outputFile) {
+    if (!inputFile.existsAsFile())
+        return false;
+
+    juce::AudioFormatManager formatManager;
+    formatManager.registerBasicFormats();
+
+    std::unique_ptr<juce::AudioFormatReader> reader (formatManager.createReaderFor(inputFile));
+    if (reader == nullptr)
+        return false;
+
+    // Ziel-SampleRate für den DSP-Kontext erzwingen (44.1 kHz)
+    const double targetSampleRate = 44100.0;
+    const int blockSiz = 512;
+
+    prepareToPlay(targetSampleRate, blockSiz);
+
+    juce::AudioBuffer<float> buffer ((int) reader->numChannels, (int) reader->lengthInSamples);
+    reader->read(&buffer, 0, (int) reader->lengthInSamples, 0, true, true);
+
+    // Blockweise Verarbeitung simulieren wie in processBlock
+    juce::MidiBuffer dummyMidi;
+    const int numSamples = buffer.getNumSamples();
+    
+    for (int startSample = 0; startSample < numSamples; startSample += blockSiz) {
+        int currentBlockSize = juce::jmin (blockSiz, numSamples - startSample);
+        
+        // Temporären Sub-Buffer für den aktuellen Block erzeugen (mit getArrayOfWritePointers)
+        juce::AudioBuffer<float> blockBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(), startSample, currentBlockSize);
+        processBlock(blockBuffer, dummyMidi);
+    }
+    
+    // Ausgabe-WAV schreiben (24-bit PCM über modernen AudioFormatWriterOptions)
+    if (outputFile.exists())
+        outputFile.deleteFile();
+
+    std::unique_ptr<juce::OutputStream> fileStream (outputFile.createOutputStream());
+    if (fileStream == nullptr)
+        return false;
+
+    juce::WavAudioFormat wavFormat;
+    
+    auto options = juce::AudioFormatWriterOptions()
+        .withSampleRate(targetSampleRate)
+        .withNumChannels(buffer.getNumChannels())
+        .withBitsPerSample(24);
+
+    std::unique_ptr<juce::AudioFormatWriter> writer (wavFormat.createWriterFor(fileStream, options));
+
+    if (writer == nullptr)
+        return false;
+
+    writer->writeFromAudioSampleBuffer(buffer, 0, numSamples);
+    return true;
+}

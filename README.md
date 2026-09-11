@@ -1,18 +1,19 @@
 # ToneX Frequency Analyzer & QA Suite
 
-> Hybrid audio analysis & QA suite for ToneX hardware. Combines a Python DSP engine for automated sweep/guitar frequency analysis with a native JUCE C++ application for real-time rig testing and interactive HTML reporting.
+> Hybrid audio analysis & QA suite for ToneX hardware. Combines a Python DSP engine for automated sweep/guitar frequency analysis with a native JUCE C++ application for real-time rig testing, automated CLI verification, and interactive HTML reporting.
 
 ---
 
 ## Features
 
 * **Closed-Loop Sweep Measurement:** Precise frequency response analysis using logarithmic sweeps, inverse filtering, and peak delay detection.
+* **Headless CLI Pipeline:** Automated offline audio processing via command-line flags (`--process`) integrated directly into the standalone JUCE lifecycle for continuous testing.
 * **Live Guitar Testing:** Real-time capture and normalization modes for testing actual playing dynamics.
 * **Equipment Safety:** Real-time detection of signal anomalies and clipping to protect monitors and speakers (like HeadRush).
 * **Interactive HTML Reports:** Export high-resolution comparison charts powered by **Plotly**, complete with custom preset labels (e.g., Vox AC30, SLO Lead, Fender Twin). Check out the sample files in the [`example_logs/`](example_logs/) folder!
 * **Hybrid Architecture:**
   * `qa_suite/`: Python-based DSP engine, visualization, and reporting.
-  * `juce_plugin/`: Native C++ application for high-performance audio handling.
+  * `juce_plugin/`: Native C++ application for high-performance audio handling and headless test execution.
 
 ---
 
@@ -42,8 +43,9 @@ The analyzer functions not only as a pure measurement tool but also exposes how 
 
 ## Automated QA & Test Suite
 
-The `qa_suite/` includes an automated test framework powered by **pytest** to ensure DSP integrity, safety, and proper configuration before hardware deployment:
+The `qa_suite/` includes an automated test framework powered by **pytest** interacting directly with the compiled native headless binary:
 
+* **DSP Pipeline Verification (`test_dsp_pipeline.py`):** Executes automated headless rendering passes through `GuitarRigAnalyzer.exe` to validate end-to-end signal processing integrity.
 * **Frequency Response & Clipping Protection (`test_frequency_response.py`):** Validates clean curves against abrupt comb-filtering and detects hazardous 0 dB high-frequency clipping plateaus to safeguard FRFR monitors and speakers.
 * **Latency Estimation (`test_latency.py`):** Verifies precise sample-delay tracking using cross-correlation (`scipy.signal.correlate`) between reference and response signals.
 * **Harmonic Distortion (`test_distortion.py`):** Simulates and monitors non-linear saturation thresholds and harmonic behavior across gain stages.
@@ -78,31 +80,38 @@ cmake -B build -G "Visual Studio 18 2026" -A x64
 cmake --build build --config Release
 ```
 
-### Launching the Standalone App
+### Launching the Standalone App & Headless Usage
 
-Once built successfully, you can navigate to the artifacts folder and launch the standalone executable:
+Once built successfully, you can launch the interactive graphical application:
 
 ```cmd
 cd build\juce_plugin\GuitarRigAnalyzer_artefacts\Release\Standalone\
 GuitarRigAnalyzer.exe
 ```
 
+For automated CLI processing (used by the test suite), invoke the executable with input and output file parameters:
+
+```cmd
+cd build\juce_plugin\GuitarRigAnalyzer_artefacts\Release\Standalone\
+GuitarRigAnalyzer.exe --process input.wav output.wav
+```
+
 ---
-
-
 
 ## Project Structure
 
 ```text
-├── qa_suite/            # Python DSP engine & analysis tools
+├── qa_suite/              # Python DSP engine & analysis tools
+│   ├── assets/            # Test assets & generated reference wav files
 │   ├── pyproject.toml
-│   ├── tests/           # Automated pytest suite (clipping, latency, distortion, config)
-│   └── tools/           # Core analyzer scripts & config.yaml
-├── juce_plugin/         # Native JUCE C++ application
-├── cmake/               # CMake configuration files
-├── example_logs/        # Interactive HTML reports for offline viewing
-├── assets/              # Visual assets & screenshots for documentation
-├── CMakeLists.txt       # Root CMake build configuration
+│   ├── tests/             # Automated pytest suite (DSP pipeline, clipping, latency, distortion, config)
+│   └── tools/             # Core analyzer scripts & config.yaml
+├── juce_plugin/           # Native JUCE C++ application
+│   └── Source/            # Main.cpp, PluginProcessor, PluginEditor, DSP filters
+├── cmake/                 # CMake configuration files
+├── example_logs/          # Interactive HTML reports for offline viewing
+├── assets/                # Visual assets & screenshots for documentation
+├── CMakeLists.txt         # Root CMake build configuration
 └── .gitignore
 ```
 

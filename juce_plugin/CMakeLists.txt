@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.22)
 
 project(GuitarRigAnalyzer VERSION 0.1.0)
 
-# JUCE plugin target definition supporting Standalone and VST3
 juce_add_plugin(GuitarRigAnalyzer
     COMPANY_NAME "JensAudio"
     PLUGIN_NAME "GuitarRigAnalyzer"
@@ -12,11 +11,10 @@ juce_add_plugin(GuitarRigAnalyzer
     VST3_CAN_REPLACE_VST2 FALSE
 )
 
-# Wichtig: Generiert die von den Include-Dateien erwartete JuceHeader.h
 juce_generate_juce_header(GuitarRigAnalyzer)
 
-# Source files mapping to the created architecture
 target_sources(GuitarRigAnalyzer PRIVATE
+    Source/Main.cpp
     Source/PluginProcessor.cpp
     Source/PluginProcessor.h
     Source/PluginEditor.cpp
@@ -25,7 +23,6 @@ target_sources(GuitarRigAnalyzer PRIVATE
     Source/dsp/TiltFilter.h
 )
 
-# Link necessary JUCE modules for DSP, audio handling, and GUI rendering
 target_link_libraries(GuitarRigAnalyzer PRIVATE
     juce::juce_audio_utils
     juce::juce_dsp
@@ -35,7 +32,12 @@ target_link_libraries(GuitarRigAnalyzer PRIVATE
     juce::juce_recommended_warning_flags
 )
 
-# Suppress forced VST2/VST3-Parametervalidation for new Plugins
 target_compile_definitions(GuitarRigAnalyzer PRIVATE
     JUCE_IGNORE_VST3_MISMATCHED_PARAMETER_ID_WARNING=1
+    JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP=1
+    JUCE_ALLOW_CUSTOM_STANDALONE_WINDOW=1
 )
+
+if(TARGET GuitarRigAnalyzer_Standalone)
+    set_target_properties(GuitarRigAnalyzer_Standalone PROPERTIES WIN32_EXECUTABLE TRUE)
+endif()

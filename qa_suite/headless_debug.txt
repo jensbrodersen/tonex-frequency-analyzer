@@ -1,0 +1,9 @@
+Raw commandLine: --process D:\documents\MyGithub\audio\juce_applications\guitar-rig-analyzer\qa_suite\assets\test_input.wav D:\documents\MyGithub\audio\juce_applications\guitar-rig-analyzer\qa_suite\assets\test_output.wav
+Args count: 3
+arg[0] = --process
+arg[1] = D:\documents\MyGithub\audio\juce_applications\guitar-rig-analyzer\qa_suite\assets\test_input.wav
+arg[2] = D:\documents\MyGithub\audio\juce_applications\guitar-rig-analyzer\qa_suite\assets\test_output.wav
+processIndex: 0
+Input exists: YES
+Processing success: YES
+Output exists after process: YES

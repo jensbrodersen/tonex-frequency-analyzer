@@ -36,6 +36,9 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    // Neue Methode für den Headless / CLI Offline-Modus
+    bool processOfflineFile (const juce::File& inputFile, const juce::File& outputFile);
+
 private:
     TiltFilter tiltFilter;
 
