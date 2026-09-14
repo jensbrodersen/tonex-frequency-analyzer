@@ -1,5 +1,7 @@
 # ToneX Frequency Analyzer & QA Suite
 
+[![CI & DSP Verification](https://github.com/jensbrodersen/tonex-frequency-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/jensbrodersen/tonex-frequency-analyzer/actions/workflows/ci.yml)
+
 > Hybrid audio analysis & QA suite for ToneX hardware. Combines a Python DSP engine for automated sweep/guitar frequency analysis with a native JUCE C++ application for real-time rig testing, automated CLI verification, and interactive HTML reporting.
 
 ---
@@ -59,6 +61,15 @@ Navigate into the QA suite and run the test harness via Python:
 cd qa_suite
 python -m pytest
 ```
+
+### Continuous Integration (CI/CD)
+
+The project utilizes **GitHub Actions** (`.github/workflows/ci.yml`) to ensure cross-platform integrity on every push to the `main` branch. The automated pipeline performs the following actions on a fresh Windows runner (`windows-latest`):
+1. **Environment Setup:** Clones the JUCE framework and sets up Python 3.13.
+2. **Dependency Management:** Installs minimal required QA suite dependencies (`pyyaml`, `numpy`, `scipy`).
+3. **Headless Compilation:** Configures CMake and compiles the native `GuitarRigAnalyzer.exe` (Standalone & VST3) in Release mode using Visual Studio toolchains.
+4. **Automated Verification:** Executes the complete `pytest` test harness against the freshly built binary to guarantee zero regressions in DSP processing.
+
 ---
 
 ## Building the Native JUCE C++ Application
