@@ -9,26 +9,48 @@ public:
     const juce::String getApplicationVersion() override { return "1.0.0"; }
     bool moreThanOneInstanceAllowed() override { return true; }
 
-    void initialise (const juce::String& commandLine) override {
+void initialise (const juce::String& commandLine) override {
         juce::StringArray args;
         args.addTokens(commandLine, true);
         args.trim();
 
         int processIndex = args.indexOf("--process");
-        if (processIndex != -1 && args.size() >= processIndex + 3) {
+        if (processIndex != -1) {
+            // Prüfen, ob die Parameter für --process vollständig sind
+            if (args.size() < processIndex + 3) {
+                std::cerr << "Error: Missing input or output file for --process." << std::endl;
+                std::exit(1);
+            }
+
             juce::File inputFile (args[processIndex + 1]);
             juce::File outputFile (args[processIndex + 2]);
 
-            GuitarRigAnalyzerAudioProcessor processor;
-            [[maybe_unused]] bool success = processor.processOfflineFile(inputFile, outputFile);
+            // Wenn die Eingabedatei nicht existiert, direkt mit Fehler abbrechen
+            if (!inputFile.existsAsFile()) {
+                std::cerr << "Error: Input file does not exist: " << inputFile.getFullPathName() << std::endl;
+                std::exit(1);
+            }
 
-            juce::JUCEApplication::quit();
-            return;
+            GuitarRigAnalyzerAudioProcessor processor;
+            bool success = processor.processOfflineFile(inputFile, outputFile);
+
+            if (!success) {
+                std::exit(1);
+            }
+
+            std::exit(0);
         }
 
+        // Wenn andere Argumente übergeben wurden, die kein gültiges Kommando sind:
+        if (args.size() > 0) {
+            std::cerr << "Error: Unknown or invalid command line arguments." << std::endl;
+            std::exit(1); // Verhindert das Öffnen des GUI-Fensters bei falschen Parametern
+        }
+
+        // Nur wenn gar keine Argumente übergeben wurden, das GUI normal öffnen
         mainWindow.reset (new StandaloneWindow (getApplicationName(),
-                                     std::unique_ptr<juce::AudioProcessor>(createPluginFilter()),
-                                     *this));
+                             std::unique_ptr<juce::AudioProcessor>(createPluginFilter()),
+                             *this));
     }
 
     void shutdown() override {

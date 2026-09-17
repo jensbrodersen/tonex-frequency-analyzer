@@ -52,6 +52,8 @@ The `qa_suite/` includes an automated test framework powered by **pytest** inter
 * **Latency Estimation (`test_latency.py`):** Verifies precise sample-delay tracking using cross-correlation (`scipy.signal.correlate`) between reference and response signals.
 * **Harmonic Distortion (`test_distortion.py`):** Simulates and monitors non-linear saturation thresholds and harmonic behavior across gain stages.
 * **System Alignment (`test_config.py`, `test_audio_sample_rate.py`):** Ensures configuration consistency (strictly locked to **44.1 kHz** to avoid resampling drift or clock mismatches between Windows and audio hardware).
+* **CLI Edge Cases (`test_edge_cases.py`):** Verifies robust handling of invalid command-line flags and missing input files, ensuring immediate non-zero exit codes without GUI interference.
+* **DSP Stress Testing (`test_stress_dsp.py`):** Pushes the pipeline to its limits using extreme noise and edge-case signal inputs under heavy load.
 
 ### Running Tests Locally
 
