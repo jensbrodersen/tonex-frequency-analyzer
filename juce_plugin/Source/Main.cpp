@@ -9,7 +9,7 @@ public:
     const juce::String getApplicationVersion() override { return "1.0.0"; }
     bool moreThanOneInstanceAllowed() override { return true; }
 
-void initialise (const juce::String& commandLine) override {
+    void initialise (const juce::String& commandLine) override {
         juce::StringArray args;
         args.addTokens(commandLine, true);
         args.trim();
@@ -31,8 +31,16 @@ void initialise (const juce::String& commandLine) override {
                 std::exit(1);
             }
 
+            // Optionalen --tilt Parameter auslesen (Standard: 0.0)
+            float tiltValue = 0.0f;
+            int tiltIndex = args.indexOf("--tilt");
+            if (tiltIndex != -1 && args.size() > tiltIndex + 1) {
+                tiltValue = args[tiltIndex + 1].getFloatValue();
+            }
+
             GuitarRigAnalyzerAudioProcessor processor;
-            bool success = processor.processOfflineFile(inputFile, outputFile);
+            // Tilt-Wert an processOfflineFile übergeben
+            bool success = processor.processOfflineFile(inputFile, outputFile, tiltValue);
 
             if (!success) {
                 std::exit(1);

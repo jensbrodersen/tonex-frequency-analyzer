@@ -37,7 +37,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     // Neue Methode für den Headless / CLI Offline-Modus
-    bool processOfflineFile (const juce::File& inputFile, const juce::File& outputFile);
+    bool processOfflineFile (const juce::File& inputFile, const juce::File& outputFile, float tiltValue = 0.0f);
 
 private:
     TiltFilter tiltFilter;

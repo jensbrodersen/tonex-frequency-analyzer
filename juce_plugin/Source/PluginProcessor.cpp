@@ -129,7 +129,8 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {
     return new GuitarRigAnalyzerAudioProcessor();
 }
 
-bool GuitarRigAnalyzerAudioProcessor::processOfflineFile (const juce::File& inputFile, const juce::File& outputFile) {
+bool GuitarRigAnalyzerAudioProcessor::processOfflineFile (const juce::File& inputFile, const juce::File& outputFile, float tiltValue)
+{
     if (!inputFile.existsAsFile())
         return false;
 
@@ -148,6 +149,15 @@ bool GuitarRigAnalyzerAudioProcessor::processOfflineFile (const juce::File& inpu
 
     juce::AudioBuffer<float> buffer ((int) reader->numChannels, (int) reader->lengthInSamples);
     reader->read(&buffer, 0, (int) reader->lengthInSamples, 0, true, true);
+
+    tiltFilter.setTiltDb(tiltValue * 6.0f); // Tilt-Wert setzen
+    tiltFilter.process(buffer);            // Audio-Puffer filtern
+
+    // Optional: Tilt-Filter vorab auf den gesamten Puffer anwenden (oder direkt im Block-Loop, 
+    // je nachdem, wie dein Tilt-Filter implementiert ist. Hier als Vorbereitung vor der Block-Verarbeitung):
+    // applyTiltFilter(buffer, tiltValue); 
+    // Alternativ, falls du eine Methode im Processor hast, die den Tilt-Wert setzt:
+    // setTiltParameter(tiltValue);
 
     // Blockweise Verarbeitung simulieren wie in processBlock
     juce::MidiBuffer dummyMidi;

@@ -54,6 +54,7 @@ The `qa_suite/` includes an automated test framework powered by **pytest** inter
 * **System Alignment (`test_config.py`, `test_audio_sample_rate.py`):** Ensures configuration consistency (strictly locked to **44.1 kHz** to avoid resampling drift or clock mismatches between Windows and audio hardware).
 * **CLI Edge Cases (`test_edge_cases.py`):** Verifies robust handling of invalid command-line flags and missing input files, ensuring immediate non-zero exit codes without GUI interference.
 * **DSP Stress Testing (`test_stress_dsp.py`):** Pushes the pipeline to its limits using extreme noise and edge-case signal inputs under heavy load.
+* **Tilt-Filter Verification (`test_tilt_filter.py`):** Validates automated high-to-low frequency energy ratio shifts on white noise when applying the `--tilt` CLI parameter.
 
 ### Running Tests Locally
 
@@ -106,7 +107,7 @@ For automated CLI processing (used by the test suite), invoke the executable wit
 
 ```cmd
 cd build\juce_plugin\GuitarRigAnalyzer_artefacts\Release\Standalone\
-GuitarRigAnalyzer.exe --process input.wav output.wav
+GuitarRigAnalyzer.exe --process input.wav output.wav --tilt 0.8
 ```
 
 ---
@@ -117,10 +118,10 @@ GuitarRigAnalyzer.exe --process input.wav output.wav
 ├── qa_suite/              # Python DSP engine & analysis tools
 │   ├── assets/            # Test assets & generated reference wav files
 │   ├── pyproject.toml
-│   ├── tests/             # Automated pytest suite (DSP pipeline, clipping, latency, distortion, config)
+│   ├── tests/             # Automated pytest suite (DSP, clipping, latency, distortion, config, tilt filter)
 │   └── tools/             # Core analyzer scripts & config.yaml
 ├── juce_plugin/           # Native JUCE C++ application
-│   └── Source/            # Main.cpp, PluginProcessor, PluginEditor, DSP filters
+│   └── Source/            # Main.cpp, PluginProcessor, PluginEditor, and DSP/TiltFilter.h
 ├── cmake/                 # CMake configuration files
 ├── example_logs/          # Interactive HTML reports for offline viewing
 ├── assets/                # Visual assets & screenshots for documentation
